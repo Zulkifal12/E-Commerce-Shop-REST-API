@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
+//Multers is using for to handle multiple form submission / specailly files
+const multer = require("multer");
+
+const upload = multer({ dest: "uploads/" });
 
 //Getting Product Model
 const Product = require("../models/product");
@@ -35,13 +39,13 @@ router.get("/", (req, res, next) => {
     });
 });
 
-router.post("/", (req, res, next) => {
+router.post("/", upload.single("productImage"), (req, res, next) => {
+  console.log(req.file);
   let product = new Product({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
     price: req.body.price,
   });
-  console.log(product);
   product
     .save()
     .then((result) => {
