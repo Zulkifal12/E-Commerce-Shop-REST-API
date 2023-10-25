@@ -24,7 +24,8 @@ app.use(bodyParser.json());
 //Routes which handel incoming requests
 app.use("/products", productsRoutes);
 app.use("/order", orderRoutes);
-
+//Publish Upload Folder publically
+app.use("/uploads", express.static("uploads"));
 //Error Handling
 app.use((req, res, next) => {
   const error = new Error("Not Found Issue");
