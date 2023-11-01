@@ -1,6 +1,7 @@
 const express = require("express");
 const productsRoutes = require("./API/routes/products");
 const orderRoutes = require("./API/routes/orders");
+const userRoutes = require("./API/routes/user");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const app = express();
@@ -24,6 +25,7 @@ app.use(bodyParser.json());
 //Routes which handel incoming requests
 app.use("/products", productsRoutes);
 app.use("/order", orderRoutes);
+app.use("/user", userRoutes);
 //Publish Upload Folder publically
 app.use("/uploads", express.static("uploads"));
 //Error Handling
