@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 //Multers is using for to handle multiple form submission / specailly files
 const multer = require("multer");
+const checkAuth = require("../middleware/check-auth");
 
 //Store the file in the multer Storage
 const storage = multer.diskStorage({
@@ -68,7 +69,7 @@ router.get("/", (req, res, next) => {
     });
 });
 
-router.post("/", upload.single("productImage"), (req, res, next) => {
+router.post("/", checkAuth, upload.single("productImage"), (req, res, next) => {
   let product = new Product({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
@@ -128,7 +129,7 @@ router.get("/:productId", (req, res, next) => {
     });
 });
 
-router.patch("/:productId", (req, res, next) => {
+router.patch("/:productId", checkAuth, (req, res, next) => {
   const id = req.params.productId;
   const updateOps = {};
   for (const ops of req.body) {
@@ -157,12 +158,19 @@ router.patch("/:productId", (req, res, next) => {
   });
 });
 
-router.delete("/:productId", (req, res, next) => {
+router.delete("/:productId", checkAuth, (req, res, next) => {
   const id = req.params.productId;
   Product.deleteOne({ _id: id })
     .exec()
     .then((result) => {
-      res.status(200).json(result);
+      res.status(200).json({
+        message: "Product Deleted",
+        request: {
+          type: "POST",
+          url: "http://localhost:3000/products",
+          body: { name: "String", price: "Number" },
+        },
+      });
     })
     .catch((err) => {
       res.status(500).json({
